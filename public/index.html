@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipedrive Iframe App</title>
+</head>
+<body>
+    <h1>Pipedrive Deal Name Changer</h1>
+    <button id="change-deal-name">Change Deal Name to "test1"</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@pipedrive/app-extensions-sdk@0/dist/index.umd.js"></script>
+    <script>
+        (async function() {
+            try {
+                // Initialize the SDK
+                const sdk = await new AppExtensionsSDK().initialize();
+                console.log('SDK initialized with identifier:', sdk.identifier);
+
+                // Set up the button click event
+                document.getElementById('change-deal-name').addEventListener('click', async () => {
+                    try {
+                        // Get the current deal ID
+                        const context = await sdk.execute(Command.GET_CONTEXT);
+                        const dealId = context.id;
+
+                        // Call the backend to update the deal name
+                        const response = await fetch(`/update-deal/${dealId}`, {
+                            method: 'POST',
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            alert('Deal name changed to "test1"');
+                        } else {
+                            alert('Failed to change the deal name.');
+                        }
+                    } catch (err) {
+                        console.error('Error updating deal name:', err);
+                        alert('Failed to change the deal name.');
+                    }
+                });
+            } catch (error) {
+                console.error('Error initializing SDK:', error);
+            }
+        })();
+    </script>
+</body>
+</html>
