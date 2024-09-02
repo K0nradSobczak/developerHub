@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const passport = require('passport');
 const { Strategy } = require('passport-oauth2');
+require('dotenv').config();
+
 
 const api = require('./api');
 const config = require('./config');
@@ -10,7 +12,6 @@ const User = require('./db/user');
 User.createTable();
 
 const app = express();
-
 passport.use(
     'pipedrive',
     new Strategy({
